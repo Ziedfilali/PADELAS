@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+models/*.joblib
+data/*.csv
+n8n_data/
+mlflow_data/
+minio_data/

@@ -1,0 +1,163 @@
+{
+  "name": "Padel ML Automation Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "n1",
+      "name": "Scheduler Trigger (Daily)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://model-service:8000/health",
+        "options": {}
+      },
+      "id": "n2",
+      "name": "Check Training API Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://model-service:8000/train/all",
+        "sendBody": false,
+        "options": {
+          "timeout": 1200000
+        }
+      },
+      "id": "n3",
+      "name": "Execute All Models",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://model-service:8000/models/versions",
+        "options": {}
+      },
+      "id": "n4",
+      "name": "Retrieve Model Versions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1090,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pipeline",
+              "name": "pipeline_status",
+              "value": "SUCCESS",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "execution_time",
+              "value": "={{$now}}",
+              "type": "string"
+            },
+            {
+              "id": "versions",
+              "name": "model_versions",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n5",
+      "name": "Workflow Documentation Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1360,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "Scheduler Trigger (Daily)": {
+      "main": [
+        [
+          {
+            "node": "Check Training API Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Training API Health": {
+      "main": [
+        [
+          {
+            "node": "Execute All Models",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute All Models": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Model Versions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Model Versions": {
+      "main": [
+        [
+          {
+            "node": "Workflow Documentation Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "active": false,
+  "versionId": "1"
+}

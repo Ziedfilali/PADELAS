@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Padel Matchup Predictor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
+    <div class="overlay"></div>
+    <main class="layout">
+      <section class="hero glass">
+        <p class="badge">Padel AI Engine</p>
+        <h1>3D Matchup Predictor</h1>
+        <p class="subtitle">
+          End-to-end pipeline: Interface → API → Model → Winner prediction with confidence.
+        </p>
+        <div class="hero-meta">
+          <span id="apiStatus" class="status pending">Checking API...</span>
+          <span class="small">Connected endpoint: <code id="apiUrlLabel"></code></span>
+        </div>
+      </section>
+
+      <section class="panel glass">
+        <form id="predictForm" class="form-grid">
+          <div class="field full">
+            <label for="apiUrl">Prediction API URL</label>
+            <input id="apiUrl" name="apiUrl" type="url" value="http://localhost:8000" required />
+          </div>
+          <div class="field">
+            <label for="tournament_name">Tournament</label>
+            <input id="tournament_name" name="tournament_name" placeholder="Qatar Major" required />
+          </div>
+          <div class="field">
+            <label for="round">Round</label>
+            <input id="round" name="round" placeholder="Semifinal" required />
+          </div>
+
+          <div class="field">
+            <label for="team1_player1_name">Team 1 - Player A</label>
+            <input id="team1_player1_name" name="team1_player1_name" placeholder="Arturo Coello" required />
+          </div>
+          <div class="field">
+            <label for="team1_player2_name">Team 1 - Player B</label>
+            <input id="team1_player2_name" name="team1_player2_name" placeholder="Agustin Tapia" required />
+          </div>
+
+          <div class="field">
+            <label for="team2_player1_name">Team 2 - Player A</label>
+            <input id="team2_player1_name" name="team2_player1_name" placeholder="Alejandro Galan" required />
+          </div>
+          <div class="field">
+            <label for="team2_player2_name">Team 2 - Player B</label>
+            <input id="team2_player2_name" name="team2_player2_name" placeholder="Juan Lebron" required />
+          </div>
+
+          <div class="actions full">
+            <button id="predictBtn" type="submit">Predict Winner</button>
+            <button id="swapBtn" type="button" class="secondary">Swap Teams</button>
+            <button id="demoBtn" type="button" class="secondary">Load Demo Data</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="results glass">
+        <h2>Prediction Result</h2>
+        <div id="resultBox" class="result-empty">Run a prediction to see winner insights.</div>
+        <div id="confidenceWrap" class="confidence hidden">
+          <div class="confidence-label">Team 1 win probability</div>
+          <div class="bar">
+            <div id="confidenceBar"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="history glass">
+        <div class="history-head">
+          <h3>Recent Predictions</h3>
+          <button id="clearHistoryBtn" class="secondary tiny">Clear</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
