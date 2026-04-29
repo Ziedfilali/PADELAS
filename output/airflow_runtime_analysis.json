@@ -1,0 +1,179 @@
+{
+  "dag_id": "dw_etl_pipeline",
+  "run_history": [
+    {
+      "run_id": "audit_run_20260429000840_1",
+      "state": "success",
+      "queue_delay_s": 1.241,
+      "runtime_s": 196.848,
+      "start_date": "2026-04-28 23:08:44.240876",
+      "end_date": "2026-04-28 23:12:01.088617"
+    },
+    {
+      "run_id": "audit_run_20260429000840_2",
+      "state": "success",
+      "queue_delay_s": 42.707,
+      "runtime_s": 168.291,
+      "start_date": "2026-04-28 23:09:31.706656",
+      "end_date": "2026-04-28 23:12:19.997328"
+    },
+    {
+      "run_id": "audit_run_20260429000840_3",
+      "state": "success",
+      "queue_delay_s": 37.707,
+      "runtime_s": 168.294,
+      "start_date": "2026-04-28 23:09:31.706789",
+      "end_date": "2026-04-28 23:12:20.001247"
+    }
+  ],
+  "task_timing_summary": [
+    {
+      "task_id": "FACT_MATCHS",
+      "runs_observed": 3,
+      "mean_duration_s": 6.182,
+      "p95_duration_s": 6.185,
+      "max_duration_s": 6.188,
+      "max_try_number": 2
+    },
+    {
+      "task_id": "FACT_PLAYERS",
+      "runs_observed": 3,
+      "mean_duration_s": 5.211,
+      "p95_duration_s": 5.196,
+      "max_duration_s": 5.256,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "dim_country",
+      "runs_observed": 3,
+      "mean_duration_s": 4.271,
+      "p95_duration_s": 4.207,
+      "max_duration_s": 4.414,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "dim_date",
+      "runs_observed": 3,
+      "mean_duration_s": 2.218,
+      "p95_duration_s": 2.209,
+      "max_duration_s": 2.241,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "dim_equipement",
+      "runs_observed": 3,
+      "mean_duration_s": 3.204,
+      "p95_duration_s": 3.202,
+      "max_duration_s": 3.209,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "dim_matchs",
+      "runs_observed": 3,
+      "mean_duration_s": 5.202,
+      "p95_duration_s": 5.199,
+      "max_duration_s": 5.212,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "dim_player",
+      "runs_observed": 3,
+      "mean_duration_s": 4.212,
+      "p95_duration_s": 4.212,
+      "max_duration_s": 4.215,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "dim_sponsor",
+      "runs_observed": 3,
+      "mean_duration_s": 3.199,
+      "p95_duration_s": 3.197,
+      "max_duration_s": 3.205,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "dim_tournament",
+      "runs_observed": 3,
+      "mean_duration_s": 2.202,
+      "p95_duration_s": 2.206,
+      "max_duration_s": 2.207,
+      "max_try_number": 1
+    },
+    {
+      "task_id": "end",
+      "runs_observed": 3,
+      "mean_duration_s": 0.0,
+      "p95_duration_s": 0.0,
+      "max_duration_s": 0.0,
+      "max_try_number": 0
+    },
+    {
+      "task_id": "start",
+      "runs_observed": 3,
+      "mean_duration_s": 0.0,
+      "p95_duration_s": 0.0,
+      "max_duration_s": 0.0,
+      "max_try_number": 0
+    }
+  ],
+  "scheduler_reliability": {
+    "samples": 20,
+    "healthy_samples": 14,
+    "unhealthy_samples": 6,
+    "healthy_ratio_pct": 70.0,
+    "heartbeat_lag_s": {
+      "mean": 21.34,
+      "max": 90.957
+    }
+  },
+  "task_attempt_diagnostics": [
+    {
+      "run_id": "audit_run_20260429000840_1",
+      "attempt1_exists": true,
+      "attempt2_exists": true,
+      "attempt1_evidence": [
+        "[2026-04-28T23:09:40.490+0000] {taskinstance.py:2905} ERROR - Task failed with exception",
+        "    raise RuntimeError(f\"{task_label} intentional first-attempt failure for diagnostics\")",
+        "RuntimeError: FACT_MATCHS intentional first-attempt failure for diagnostics",
+        "[2026-04-28T23:09:40.504+0000] {taskinstance.py:1206} INFO - Marking task as UP_FOR_RETRY. dag_id=dw_etl_pipeline, task_id=FACT_MATCHS, run_id=audit_run_20260429000840_1, execution_date=20260428T230843, start_date=20260428T230934, end_date=20260428T230940",
+        "[2026-04-28T23:09:40.527+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 10 for task FACT_MATCHS (FACT_MATCHS intentional first-attempt failure for diagnostics; 293)"
+      ],
+      "attempt2_evidence": [
+        "[2026-04-28T23:11:26.148+0000] {python.py:237} INFO - Done. Returned value was: {'task': 'FACT_MATCHS', 'try_number': 2, 'sleep_seconds': 6}",
+        "[2026-04-28T23:11:26.171+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=dw_etl_pipeline, task_id=FACT_MATCHS, run_id=audit_run_20260429000840_1, execution_date=20260428T230843, start_date=20260428T231119, end_date=20260428T231126"
+      ]
+    },
+    {
+      "run_id": "audit_run_20260429000840_2",
+      "attempt1_exists": true,
+      "attempt2_exists": true,
+      "attempt1_evidence": [
+        "[2026-04-28T23:11:35.759+0000] {taskinstance.py:2905} ERROR - Task failed with exception",
+        "    raise RuntimeError(f\"{task_label} intentional first-attempt failure for diagnostics\")",
+        "RuntimeError: FACT_MATCHS intentional first-attempt failure for diagnostics",
+        "[2026-04-28T23:11:35.768+0000] {taskinstance.py:1206} INFO - Marking task as UP_FOR_RETRY. dag_id=dw_etl_pipeline, task_id=FACT_MATCHS, run_id=audit_run_20260429000840_2, execution_date=20260428T230849, start_date=20260428T231129, end_date=20260428T231135",
+        "[2026-04-28T23:11:35.795+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 27 for task FACT_MATCHS (FACT_MATCHS intentional first-attempt failure for diagnostics; 448)"
+      ],
+      "attempt2_evidence": [
+        "[2026-04-28T23:12:09.508+0000] {python.py:237} INFO - Done. Returned value was: {'task': 'FACT_MATCHS', 'try_number': 2, 'sleep_seconds': 6}",
+        "[2026-04-28T23:12:09.548+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=dw_etl_pipeline, task_id=FACT_MATCHS, run_id=audit_run_20260429000840_2, execution_date=20260428T230849, start_date=20260428T231203, end_date=20260428T231209"
+      ]
+    },
+    {
+      "run_id": "audit_run_20260429000840_3",
+      "attempt1_exists": true,
+      "attempt2_exists": true,
+      "attempt1_evidence": [
+        "[2026-04-28T23:11:52.604+0000] {taskinstance.py:2905} ERROR - Task failed with exception",
+        "    raise RuntimeError(f\"{task_label} intentional first-attempt failure for diagnostics\")",
+        "RuntimeError: FACT_MATCHS intentional first-attempt failure for diagnostics",
+        "[2026-04-28T23:11:52.616+0000] {taskinstance.py:1206} INFO - Marking task as UP_FOR_RETRY. dag_id=dw_etl_pipeline, task_id=FACT_MATCHS, run_id=audit_run_20260429000840_3, execution_date=20260428T230854, start_date=20260428T231146, end_date=20260428T231152",
+        "[2026-04-28T23:11:52.645+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 29 for task FACT_MATCHS (FACT_MATCHS intentional first-attempt failure for diagnostics; 466)"
+      ],
+      "attempt2_evidence": [
+        "[2026-04-28T23:12:18.388+0000] {python.py:237} INFO - Done. Returned value was: {'task': 'FACT_MATCHS', 'try_number': 2, 'sleep_seconds': 6}",
+        "[2026-04-28T23:12:18.423+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=dw_etl_pipeline, task_id=FACT_MATCHS, run_id=audit_run_20260429000840_3, execution_date=20260428T230854, start_date=20260428T231212, end_date=20260428T231218"
+      ]
+    }
+  ]
+}
