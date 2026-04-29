@@ -22,6 +22,32 @@
       ]
     },
     {
+      "parameters": {},
+      "id": "n13",
+      "name": "Manual Trigger (Training Test)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "padel-retrain-now",
+        "responseMode": "onReceived"
+      },
+      "id": "n6",
+      "name": "Webhook Trigger (Event Retrain)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        460
+      ]
+    },
+    {
       "parameters": {
         "method": "GET",
         "url": "http://model-service:8000/health",
@@ -103,10 +129,211 @@
         1360,
         280
       ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "audit_ts_train",
+              "name": "audit_time",
+              "value": "={{$now}}",
+              "type": "string"
+            },
+            {
+              "id": "audit_kind_train",
+              "name": "audit_type",
+              "value": "training_pipeline",
+              "type": "string"
+            },
+            {
+              "id": "audit_status_train",
+              "name": "audit_status",
+              "value": "success",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n7",
+      "name": "Audit Training Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "n8",
+      "name": "Scheduler Trigger (Inference Every 6h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        700
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "n14",
+      "name": "Manual Trigger (Inference Test)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://model-service:8000/predict/matchup",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"tournament_name\": \"Qatar Major\",\n  \"round\": \"Semifinal\",\n  \"team1_player1_name\": \"Arturo Coello\",\n  \"team1_player2_name\": \"Agustin Tapia\",\n  \"team2_player1_name\": \"Alejandro Galan\",\n  \"team2_player2_name\": \"Juan Lebron\"\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "n9",
+      "name": "Automated Matchup Inference",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "audit_ts_inf",
+              "name": "audit_time",
+              "value": "={{$now}}",
+              "type": "string"
+            },
+            {
+              "id": "audit_kind_inf",
+              "name": "audit_type",
+              "value": "inference_pipeline",
+              "type": "string"
+            },
+            {
+              "id": "audit_winner_inf",
+              "name": "winner",
+              "value": "={{$json.winner}}",
+              "type": "string"
+            },
+            {
+              "id": "audit_prob_inf",
+              "name": "team_1_probability",
+              "value": "={{$json.team_1_probability}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n10",
+      "name": "Audit Inference Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        860,
+        700
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "n11",
+      "name": "Workflow Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "alert_url_cfg",
+              "name": "alert_url",
+              "value": "https://example.com/your-webhook-url",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n15",
+      "name": "Alert Config (Set URL)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        430,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$json.alert_url}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"[n8n] Padel workflow failed\",\n  \"workflow\": \"{{$json.workflow.name}}\",\n  \"execution\": \"{{$json.execution.id}}\",\n  \"lastNode\": \"{{$json.lastNodeExecuted}}\",\n  \"error\": \"{{$json.error.message}}\"\n}",
+        "options": {}
+      },
+      "id": "n12",
+      "name": "Send Failure Alert (Webhook)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        940
+      ]
     }
   ],
   "connections": {
+    "Manual Trigger (Training Test)": {
+      "main": [
+        [
+          {
+            "node": "Check Training API Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Scheduler Trigger (Daily)": {
+      "main": [
+        [
+          {
+            "node": "Check Training API Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Trigger (Event Retrain)": {
       "main": [
         [
           {
@@ -144,6 +371,72 @@
         [
           {
             "node": "Workflow Documentation Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Documentation Output": {
+      "main": [
+        [
+          {
+            "node": "Audit Training Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scheduler Trigger (Inference Every 6h)": {
+      "main": [
+        [
+          {
+            "node": "Automated Matchup Inference",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger (Inference Test)": {
+      "main": [
+        [
+          {
+            "node": "Automated Matchup Inference",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Automated Matchup Inference": {
+      "main": [
+        [
+          {
+            "node": "Audit Inference Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Alert Config (Set URL)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert Config (Set URL)": {
+      "main": [
+        [
+          {
+            "node": "Send Failure Alert (Webhook)",
             "type": "main",
             "index": 0
           }

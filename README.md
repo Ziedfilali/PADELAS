@@ -48,14 +48,65 @@ docker compose --env-file .env up -d --build
 1. In n8n: **Workflows -> Import from File**
 2. Import `workflows/padel_ml_automation.json`
 3. Open workflow and verify nodes:
+   - `Manual Trigger (Training Test)`
    - `Scheduler Trigger (Daily)`
+   - `Webhook Trigger (Event Retrain)`
    - `Check Training API Health`
    - `Execute All Models`
    - `Retrieve Model Versions`
    - `Workflow Documentation Output`
+   - `Audit Training Result`
+   - `Manual Trigger (Inference Test)`
+   - `Scheduler Trigger (Inference Every 6h)`
+   - `Automated Matchup Inference`
+   - `Audit Inference Result`
+   - `Workflow Error Trigger`
+   - `Send Failure Alert (Webhook)`
 4. Click **Activate**
 
-The trigger runs every 24h (you can change schedule inside trigger node).
+Training trigger runs every 24h, inference trigger runs every 6h (you can change schedules inside trigger nodes).
+
+For instant validation in n8n editor, use:
+
+- `Manual Trigger (Training Test)` to run retraining immediately
+- `Manual Trigger (Inference Test)` to run inference immediately
+
+### 5.1) How to see each n8n criterion in action
+
+#### A) Cron + HTTP + audit node
+
+1. In n8n, click **Execute workflow** (or wait for schedule).
+2. Open **Executions** tab.
+3. Confirm successful path:
+   - `Scheduler Trigger (Daily)` -> `Check Training API Health` -> `Execute All Models`
+   - `Retrieve Model Versions` -> `Workflow Documentation Output`
+   - `Audit Training Result`
+
+#### B) Webhook trigger (event-driven retraining)
+
+Call the webhook endpoint:
+
+```bash
+curl -X POST http://localhost:5680/webhook/padel-retrain-now
+```
+
+Then check n8n **Executions**: run should start from `Webhook Trigger (Event Retrain)`.
+
+#### C) Automated inference pipeline
+
+Run manually from n8n or wait for 6h schedule:
+
+- `Scheduler Trigger (Inference Every 6h)` -> `Automated Matchup Inference` -> `Audit Inference Result`
+
+You can also verify prediction calls in `logs/api.log` (`/predict/matchup` entries).
+
+#### D) Error handling + notifications in n8n
+
+1. Open node `Alert Config (Set URL)`.
+2. Set field `alert_url` with your Slack/Discord/custom webhook URL.
+3. Trigger a failure (for example stop `model-service`, then execute workflow).
+4. Flow should run:
+   - `Workflow Error Trigger` -> `Alert Config (Set URL)` -> `Send Failure Alert (Webhook)`
 
 ## 6) Verify versioning and old versions
 
@@ -176,8 +227,11 @@ Your 4 notebooks were copied to `notebooks/` for traceability:
 
 ## 9) Grid evidence (for report)
 
-- **Workflow Design**: full trigger -> retrieval -> execution -> output pipeline in n8n
+- **Workflow Design**: full trigger -> retrieval -> execution -> output pipeline in n8n, plus scheduled inference flow
 - **Workflow Documentation**: nodes are labelled, and JSON export is included (`workflows/padel_ml_automation.json`)
+- **n8n Node Usage**: Cron/Schedule + HTTP Request + Webhook + Set nodes are present
+- **Automation Logic**: scheduled retraining (24h), event-driven retraining (webhook), and scheduled inference (6h)
+- **Robustness/Monitoring**: n8n workflow error trigger + webhook alert node, plus API logs/retries/errors
 - **Model Lifecycle**: model versions are managed in MLflow, old versions remain accessible
 
 ## 10) Robustness & Monitoring (Error handling + logs + retries + alerts)
@@ -239,7 +293,7 @@ A modern interactive frontend is included in `web-app/` with:
 
 - 3D animated hero scene (Three.js)
 - Professional glassmorphism layout
-- Live API status check (`/health`)
+- Calls the prediction API at `http://localhost:8000` (docker `model-service`)
 - Matchup form calling `POST /predict/matchup`
 - Winner card + confidence bar
 - Prediction history (localStorage)
@@ -253,7 +307,7 @@ docker compose up -d --build model-service web-app
 
 Open:
 
-- Web app: [http://localhost:8080](http://localhost:8080)
+- Web app: [http://localhost:8083](http://localhost:8083)
 - API docs: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ### End-to-end test

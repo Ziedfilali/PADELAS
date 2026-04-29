@@ -1,13 +1,11 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js";
+/** Backend API (docker-compose maps model-service to localhost:8000). */
+const API_BASE = "http://localhost:8000";
 
 const form = document.getElementById("predictForm");
 const resultBox = document.getElementById("resultBox");
 const confidenceWrap = document.getElementById("confidenceWrap");
 const confidenceBar = document.getElementById("confidenceBar");
 const historyList = document.getElementById("historyList");
-const apiStatus = document.getElementById("apiStatus");
-const apiUrl = document.getElementById("apiUrl");
-const apiUrlLabel = document.getElementById("apiUrlLabel");
 const swapBtn = document.getElementById("swapBtn");
 const demoBtn = document.getElementById("demoBtn");
 const clearHistoryBtn = document.getElementById("clearHistoryBtn");
@@ -32,29 +30,6 @@ function renderHistory() {
         ).toLocaleString()}</small></div>`
     )
     .join("");
-}
-
-function updateApiLabel() {
-  apiUrlLabel.textContent = apiUrl.value.replace(/\/$/, "");
-}
-
-function setApiStatus(type, text) {
-  apiStatus.className = `status ${type}`;
-  apiStatus.textContent = text;
-}
-
-async function checkApiHealth() {
-  updateApiLabel();
-  setApiStatus("pending", "Checking API...");
-  try {
-    const base = apiUrl.value.replace(/\/$/, "");
-    const res = await fetch(`${base}/health`, { method: "GET" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    setApiStatus("ok", "API online");
-  } catch (err) {
-    setApiStatus("error", "API unreachable");
-    console.error(err);
-  }
 }
 
 function winnerCard(response) {
@@ -85,7 +60,6 @@ function setConfidence(probability) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form).entries());
-  const base = data.apiUrl.replace(/\/$/, "");
   const payload = {
     tournament_name: data.tournament_name,
     round: data.round,
@@ -99,7 +73,7 @@ form.addEventListener("submit", async (e) => {
   confidenceWrap.classList.add("hidden");
 
   try {
-    const response = await fetch(`${base}/predict/matchup`, {
+    const response = await fetch(`${API_BASE}/predict/matchup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -123,12 +97,11 @@ form.addEventListener("submit", async (e) => {
     persistHistory();
     renderHistory();
   } catch (err) {
-    showError("Could not reach API. Check API URL and CORS.", "");
+    showError("Could not reach the prediction service. Ensure the API is running.", "");
     console.error(err);
   }
 });
 
-apiUrl.addEventListener("change", checkApiHealth);
 swapBtn.addEventListener("click", () => {
   const t1a = document.getElementById("team1_player1_name");
   const t1b = document.getElementById("team1_player2_name");
@@ -153,69 +126,4 @@ clearHistoryBtn.addEventListener("click", () => {
   renderHistory();
 });
 
-// Three.js lightweight neon scene
-const canvas = document.getElementById("scene");
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.z = 9;
-
-const globe = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(1.6, 8),
-  new THREE.MeshStandardMaterial({
-    color: 0x7c3aed,
-    emissive: 0x1e1b4b,
-    metalness: 0.4,
-    roughness: 0.2,
-    wireframe: false,
-  })
-);
-scene.add(globe);
-
-const ring = new THREE.Mesh(
-  new THREE.TorusGeometry(2.6, 0.06, 16, 200),
-  new THREE.MeshBasicMaterial({ color: 0x67e8f9 })
-);
-ring.rotation.x = 1.1;
-scene.add(ring);
-
-const pointLight = new THREE.PointLight(0x67e8f9, 1.8, 40);
-pointLight.position.set(3, 2, 6);
-scene.add(pointLight);
-scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-
-const stars = [];
-for (let i = 0; i < 90; i += 1) {
-  const star = new THREE.Mesh(
-    new THREE.SphereGeometry(0.025, 8, 8),
-    new THREE.MeshBasicMaterial({ color: 0xffffff })
-  );
-  star.position.set((Math.random() - 0.5) * 22, (Math.random() - 0.5) * 12, -Math.random() * 12);
-  stars.push(star);
-  scene.add(star);
-}
-
-function animate() {
-  globe.rotation.y += 0.0045;
-  globe.rotation.x += 0.0015;
-  ring.rotation.z += 0.006;
-  stars.forEach((s, idx) => {
-    s.position.y += Math.sin(Date.now() * 0.0003 + idx) * 0.00045;
-  });
-  renderer.render(scene, camera);
-  requestAnimationFrame(animate);
-}
-
-window.addEventListener("resize", () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
 renderHistory();
-updateApiLabel();
-checkApiHealth();
-animate();
