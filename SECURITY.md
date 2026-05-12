@@ -1,4 +1,6 @@
-# Security policy
+# Security policy — PADELAS
+
+This policy applies to the **PADELAS** codebase hosted in the **Padel-analytics** GitHub repository.
 
 ## Reporting a vulnerability
 

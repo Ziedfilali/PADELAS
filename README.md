@@ -1,8 +1,8 @@
-# Padel-analytics
+# PADELAS
 
-**Padel analytics & MLOps:** n8n-orchestrated training and serving, MLflow versioning, optional Expo frontend and Grafana/Prometheus monitoring — plus a Talend + Airflow audit/ETL track in a second branch.
+**PADELAS** is a padel analytics & MLOps platform: n8n-orchestrated training and serving, MLflow versioning, optional Expo frontend and Grafana/Prometheus monitoring — plus a Talend + Airflow audit/ETL track in a second branch.
 
-**Default branch `master`** holds this landing page, **`.gitignore`**, [**MIT `LICENSE`**](LICENSE), and [**`SECURITY.md`**](SECURITY.md). Application code is on the feature branches below.
+Source code is hosted in the GitHub repository **[Padel-analytics](https://github.com/Ziedfilali/Padel-analytics)** (this page). **Default branch `master`** holds this landing **README**, **`.gitignore`**, [**MIT `LICENSE`**](LICENSE), and [**`SECURITY.md`**](SECURITY.md). Application code is on the feature branches below.
 
 ## Where the code lives
 
@@ -29,14 +29,14 @@ Never commit `.env`, database passwords, API keys, or Slack webhooks. Use `.env.
 
 ## Repository
 
-[https://github.com/Ziedfilali/Padel-analytics](https://github.com/Ziedfilali/Padel-analytics)
+[https://github.com/Ziedfilali/Padel-analytics](https://github.com/Ziedfilali/Padel-analytics) (PADELAS source)
 
 ## GitHub “About” (paste once on the repo homepage)
 
 GitHub does not read these from a file; open the repo → gear icon **About** → set:
 
 - **Description:**  
-  `Padel analytics monorepo: n8n + FastAPI + MLflow/MinIO, Expo UI & monitoring; Talend + Airflow audit ETL.`
+  `PADELAS — padel analytics & MLOps: n8n + FastAPI + MLflow/MinIO, Expo UI & monitoring; Talend + Airflow audit ETL.`
 - **Topics:** type **one tag at a time**, press **Enter** after each, then add the next. **Do not** paste the whole line as a single topic (spaces are not allowed inside one topic).
 
 Suggested tags (copy **one line**, add as **one** topic, repeat for each line):
@@ -55,5 +55,6 @@ Suggested tags (copy **one line**, add as **one** topic, repeat for each line):
   - `sqlserver`
   - `padel`
   - `data-engineering`
+  - `padelas`
 
 If GitHub rejects a tag, skip it or try a shorter synonym (e.g. `etl` instead of `data-engineering`).
