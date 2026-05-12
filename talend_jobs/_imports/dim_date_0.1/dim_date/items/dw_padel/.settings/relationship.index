@@ -1,0 +1,608 @@
+[ {
+  "baseItem" : {
+    "id" : "_0AfzoC19EfGFp5m0xp1XSQ",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_sponsor",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_tournament",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - matches_with_views_interactions",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_22BNEC1uEfGaQY69YFDL7Q",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "built-in",
+    "version" : "Latest",
+    "type" : "context"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_2TMJ0BeWEfGON_BXaH-SkA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - matches",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - matches_with_views_interactions",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_6BBB4BdTEfGFFehhbKIyzw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_BmGHcBdVEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_BmGHcBdVEfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - padel_tournaments",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_6tn4IBdyEfGFFehhbKIyzw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_d-xuEBdyEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - SPONSOR",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_d-xuEBdyEfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_7Q82kBeREfGON_BXaH-SkA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - Tournois",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - matches_with_views_interactions",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_9I9AMBd0EfGFFehhbKIyzw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_SeZMYBd4EfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - PADEL_RACKETS",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_SeZMYBd4EfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_BKyRkC2oEfGup5nzSSQGRA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "DW_PADEL:_0AfzoC19EfGFp5m0xp1XSQ",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_22BNEC1uEfGaQY69YFDL7Q",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_2TMJ0BeWEfGON_BXaH-SkA",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_7Q82kBeREfGON_BXaH-SkA",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_NgHkcBeMEfGON_BXaH-SkA",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_O0wqkBZ4EfGzB5paIwtWEA",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_Q_TugC2NEfGFp5m0xp1XSQ",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_Xwp0YC1qEfGaQY69YFDL7Q",
+    "version" : "Latest",
+    "type" : "job"
+  }, {
+    "id" : "DW_PADEL:_ZYIJsBeLEfGON_BXaH-SkA",
+    "version" : "Latest",
+    "type" : "job"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_Dr1IgDG6EfGqJekMovSDxg",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_7pm-gDG5EfGqJekMovSDxg",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_7pm-gDG5EfGqJekMovSDxg - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_HhEVcBdzEfGFFehhbKIyzw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_P_HqYBd0EfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_P_HqYBd0EfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - COUNTRY",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_Id_ocDHlEfGqJekMovSDxg",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_w-mAwDHOEfGqJekMovSDxg",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "DateUtils",
+    "version" : "Latest",
+    "type" : "routine"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_date",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_w-mAwDHOEfGqJekMovSDxg - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_NgHkcBeMEfGON_BXaH-SkA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_O0wqkBZ4EfGzB5paIwtWEA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - players",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_OAxykBdtEfGFFehhbKIyzw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_nEXy4BdtEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - matches",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_nEXy4BdtEfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_PAhVoC6VEfGLXpzg26dSlw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_7pm-gDG5EfGqJekMovSDxg",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_7pm-gDG5EfGqJekMovSDxg - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - FACT_MATCHS",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_tournament",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_Q_TugC2NEfGFp5m0xp1XSQ",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_tournament",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - matches_with_views_interactions",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_Sd2ioDHLEfGqJekMovSDxg",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_w-mAwDHOEfGqJekMovSDxg",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "DateUtils",
+    "version" : "Latest",
+    "type" : "routine"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_date",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - matches_with_views_interactions",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_w-mAwDHOEfGqJekMovSDxg - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_XYu8gDGwEfGqJekMovSDxg",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_QaUY4DGwEfGqJekMovSDxg",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_QaUY4DGwEfGqJekMovSDxg - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_Xwp0YC1qEfGaQY69YFDL7Q",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - equipement",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_Y_eS8BeoEfGON_BXaH-SkA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_country",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_date",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_player",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_tournament",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - fact_tournament_analytics",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_ZKmvcBepEfGON_BXaH-SkA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_date",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_player",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_sponsor",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_tournament",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - fact_social_engagement",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - matches_with_views_interactions",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_ZYIJsBeLEfGON_BXaH-SkA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - SPONSOR",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_sponsor",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_e1AFEBdqEfGFFehhbKIyzw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ujPqIBdrEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - players",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_ujPqIBdrEfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_eDQiQBduEfGFFehhbKIyzw",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_Gl0yABdvEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_Gl0yABdvEfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_ROdOUBdTEfGFFehhbKIyzw - equipement",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+}, {
+  "baseItem" : {
+    "id" : "_pppq4BegEfGON_BXaH-SkA",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_ujPqIBdrEfGFFehhbKIyzw",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_date",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_player",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - dim_tournament",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - fact_player_performance",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_qthpsBdTEfGFFehhbKIyzw - matches_with_views_interactions",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_ujPqIBdrEfGFFehhbKIyzw - metadata",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+} ]

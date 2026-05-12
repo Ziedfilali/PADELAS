@@ -1,0 +1,44 @@
+package routines;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DateUtils {
+
+    /**
+     * Convert ANY String date -> Date
+     */
+    public static Date toDate(String dateStr) {
+        try {
+            if (dateStr == null || dateStr.trim().isEmpty()) {
+                return null;
+            }
+
+            String[] formats = {
+                "dd/MM/yyyy",
+                "MM/dd/yyyy",
+                "yyyy-MM-dd",
+                "dd-MM-yyyy",
+                "yyyy/MM/dd"
+            };
+
+            Date date = null;
+
+            for (String format : formats) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    sdf.setLenient(false);
+                    date = sdf.parse(dateStr);
+                    break;
+                } catch (Exception e) {
+                    // try next
+                }
+            }
+
+            return date;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
