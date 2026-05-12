@@ -1,0 +1,6 @@
+# Code quality (Week / local dev). Install: pip install -r requirements-dev.txt
+black>=24.0
+isort>=5.13
+flake8>=7.0
+flake8-bugbear>=24.0
+mypy>=1.8

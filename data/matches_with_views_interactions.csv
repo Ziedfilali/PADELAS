@@ -1,0 +1,10 @@
+tournament_name,round,date,winner,team1_player1_name,team1_player2_name,team2_player1_name,team2_player2_name,views,interactions,aces_t1,aces_t2,double_faults_t1,double_faults_t2,won_on_1st_serve_t1,won_on_1st_serve_t2,won_on_2nd_serve_t1,won_on_2nd_serve_t2,total_points_won_t1,total_points_won_t2,break_points_converted_t1,break_points_converted_t2,total_won_on_return_t1,total_won_on_return_t2
+FIP World Padel Championship,Final,2024-11-17,,Arturo Coello,Agustín Tapia,Juan Lebrón,Alejandro Galán,245000,38500,8,5,3,4,78,71,54,49,125,98,5,2,42,33
+FIP World Padel Championship,Semifinal,2024-11-15,team_1,Arturo Coello,Agustín Tapia,Federico Chingotto,Juan Tello,198000,31200,10,4,2,6,81,65,58,44,135,82,7,1,48,28
+FIP World Padel Championship,Semifinal,2024-11-15,team_1,Juan Lebrón,Alejandro Galán,Franco Stupaczuk,Martín Di Nenno,176000,28900,6,7,3,5,74,69,52,47,148,130,4,3,61,45
+FIP World Padel Championship,Quarterfinal,2024-11-13,team_1,Arturo Coello,Agustín Tapia,Sanyo Gutiérrez,Matías Díaz,142000,22800,12,2,1,7,84,61,61,40,118,64,8,0,52,21
+FIP World Padel Championship,Quarterfinal,2024-11-13,team_1,Juan Lebrón,Alejandro Galán,Álvaro Cepero,Lucho Capra,134000,19700,5,8,4,5,72,68,50,46,141,118,4,3,58,39
+FIP World Padel Championship,Quarterfinal,2024-11-13,team_1,Federico Chingotto,Juan Tello,Alex Ruiz,Edu Alonso,98000,14200,6,4,3,5,74,67,51,44,122,89,5,1,47,31
+FIP World Padel Championship,Quarterfinal,2024-11-13,team_1,Franco Stupaczuk,Martín Di Nenno,Sanyo Gutiérrez,Matías Díaz,112000,17500,9,3,4,3,71,74,48,53,131,109,6,2,43,62
+Premier Padel P1 Doha,Final,2024-10-08,team_1,Arturo Coello,Agustín Tapia,Federico Chingotto,Juan Tello,312000,48900,11,5,2,5,80,68,57,46,128,94,6,2,50,36
+Premier Padel P1 Doha,Semifinal,2024-10-06,team_1,Arturo Coello,Agustín Tapia,Juan Lebrón,Alejandro Galán,224000,35600,7,4,4,3,74,75,51,54,143,127,4,3,55,63

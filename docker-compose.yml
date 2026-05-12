@@ -25,6 +25,9 @@ services:
       dockerfile: model-service/Dockerfile
     container_name: n8n-mlops-model-service
     restart: unless-stopped
+    # Windows / Docker Desktop: reach SQL Server on the host via host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8000:8000"
     environment:
@@ -35,6 +38,9 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_TRUST_CERT=${DB_TRUST_CERT}
+      - DW_FALLBACK_TO_CSV=${DW_FALLBACK_TO_CSV:-true}
+      - PADEL_API_TOKEN=${PADEL_API_TOKEN:-}
+      - PADEL_API_BASE=${PADEL_API_BASE:-https://padelapi.org/api}
       - MLFLOW_TRACKING_URI=http://mlflow:5000
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER}
@@ -45,11 +51,24 @@ services:
       - LOG_FILE=/app/logs/api.log
       - ENABLE_DEBUG_ENDPOINTS=true
       - ALERT_WEBHOOK_URL=${ALERT_WEBHOOK_URL}
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-in-production}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - GROQ_MODEL=${GROQ_MODEL:-llama-3.1-8b-instant}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2}
+      # PADELAS HERO: trim tokens / survive Groq 429 (free tier TPM)
+      - PADELAS_HERO_CONTEXT_MESSAGES=${PADELAS_HERO_CONTEXT_MESSAGES:-14}
+      - PADELAS_HERO_LLM_429_RETRIES=${PADELAS_HERO_LLM_429_RETRIES:-2}
     volumes:
       - ./data:/app/data
       - ./models:/app/models
       - ./notebooks:/app/notebooks
       - ./logs:/app/logs
+      # Live-reload API code from repo (avoids rebuild during development)
+      - ./model-service/app.py:/app/app.py
+      - ./model-service/db_io.py:/app/db_io.py
+      - ./model-service/routers:/app/routers
+      - ./model-service/tests:/app/tests
     depends_on:
       - mlflow
       - minio
@@ -66,22 +85,44 @@ services:
     depends_on:
       - model-service
 
+  # Expo web UI (FIP Padel Analytics) — http://localhost:8088
+  # Prefer building this image alone (stops Compose from baking model-service in parallel → less RAM, fewer EOF crashes):
+  #   docker build -t n8n-mlops-frontend -f frontend/Dockerfile frontend
+  # If you still see "failed to receive status: rpc ... EOF", use legacy builder and/or raise Docker Desktop memory:
+  #   PowerShell: $env:DOCKER_BUILDKIT='0'; $env:COMPOSE_DOCKER_CLI_BUILD='0'; docker build -t n8n-mlops-frontend -f frontend/Dockerfile frontend
+  # Optional args match build.args below, e.g. --build-arg EXPO_PUBLIC_API_BASE=
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Same-origin `/api` via nginx (see frontend/docker/nginx.default.conf). Override if needed.
+        EXPO_PUBLIC_API_BASE: "${EXPO_PUBLIC_API_BASE:-}"
+        EXPO_PUBLIC_POWERBI_EMBED_URL: "${EXPO_PUBLIC_POWERBI_EMBED_URL:-https://app.powerbi.com/reportEmbed?reportId=c0332af6-03e7-4cbe-b297-e3d05e89bee2&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730}"
+    container_name: n8n-mlops-frontend
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    depends_on:
+      - model-service
+
   mlflow:
     image: ghcr.io/mlflow/mlflow:v2.14.1
     container_name: n8n-mlops-mlflow
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "5005:5000"
     environment:
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER}
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
     command: >
+      sh -c "pip install --no-cache-dir boto3 &&
       mlflow server
       --backend-store-uri sqlite:///mlflow.db
       --default-artifact-root s3://${MODEL_BUCKET}
       --host 0.0.0.0
-      --port 5000
+      --port 5000"
     volumes:
       - mlflow_data:/mlflow
     depends_on:
@@ -113,7 +154,59 @@ services:
       exit 0;
       "
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: n8n-mlops-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus_data:/prometheus
+    depends_on:
+      - model-service
+      - alertmanager
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: n8n-mlops-alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      # One line: full Slack Incoming Webhook URL (create from slack_webhook.url.example)
+      - ./monitoring/alertmanager/slack_webhook.url:/etc/alertmanager/slack_webhook.url:ro
+      - alertmanager_data:/alertmanager
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: n8n-mlops-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
 volumes:
   n8n_data:
   mlflow_data:
   minio_data:
+  prometheus_data:
+  alertmanager_data:
+  grafana_data:

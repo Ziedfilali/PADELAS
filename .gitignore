@@ -3,7 +3,21 @@ __pycache__/
 *.pyc
 models/*.joblib
 data/*.csv
+!data/matches_with_views_interactions.csv
+!data/monthly_views.csv
 n8n_data/
 mlflow_data/
 minio_data/
 logs/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+
+# Frontend — never commit dependencies or generated web build
+frontend/node_modules/
+frontend/dist/
+frontend/.expo/
+
+# Alertmanager: real Slack Incoming Webhook URL (never commit; copy from .example)
+monitoring/alertmanager/slack_webhook.url

@@ -16,14 +16,14 @@ This project gives you a full ML automation pipeline aligned with your professor
 
 ## 2) What is automated
 
-The API endpoint `POST /train/all` runs:
+The API endpoint `POST /train/all` runs all four tasks. You can also train **one task at a time**:
 
-- `PadelWinnerClassifier` (classification)
-- `PadelViewsRegression` (regression)
-- `PadelPlayersClustering` (clustering)
-- `PadelTimeSeriesForecast` (time series)
+- `POST /train/winner` — classification (two algorithms per run)
+- `POST /train/views` — regression (two algorithms per run)
+- `POST /train/clustering` — clustering (two algorithms per run)
+- `POST /train/timeseries` — forecasting (two algorithms per run)
 
-Each run registers a **new model version** in MLflow Model Registry.
+For each registered name (`PadelWinnerClassifier`, `PadelViewsRegression`, `PadelPlayersClustering`, `PadelTimeSeriesForecast`), every training run registers **two** MLflow model versions (two different estimators), each with its own metrics (for example accuracy / F1 for classifiers, R² / MAE for regression, silhouette / BIC for clustering, train R² for time series). Version rows in MLflow include a **description** like `Version 12 — 2026-05-04 14:30 UTC — RandomForest` (version number, UTC date and time, algorithm). Artifacts are stored in MinIO via MLflow as before.
 
 ## 3) Start the project
 
@@ -48,9 +48,14 @@ docker compose --env-file .env up -d --build
 1. In n8n: **Workflows -> Import from File**
 2. Import `workflows/padel_ml_automation.json`
 3. Open workflow and verify nodes:
-   - `Manual Trigger (Training Test)`
-   - `Scheduler Trigger (Daily)`
-   - `Webhook Trigger (Event Retrain)`
+   - `Manual Trigger (Training Test)` (full pipeline: health → train all)
+   - `Scheduler Trigger (Daily)` (same)
+   - `Webhook Trigger (Event Retrain)` → `POST .../webhook/padel-retrain-now`
+   - **Single-task training (manual + webhook each):**
+     - Classification: `Manual Train Classification Only` / `Webhook Retrain Classification` → `Train Classification Only` (`POST /train/winner`)
+     - Regression: `Manual Train Regression Only` / `Webhook Retrain Regression` → `Train Regression Only` (`POST /train/views`)
+     - Clustering: `Manual Train Clustering Only` / `Webhook Retrain Clustering` → `Train Clustering Only` (`POST /train/clustering`)
+     - Time series: `Manual Train Time Series Only` / `Webhook Retrain Time Series` → `Train Time Series Only` (`POST /train/timeseries`)
    - `Check Training API Health`
    - `Execute All Models`
    - `Retrieve Model Versions`
@@ -68,7 +73,8 @@ Training trigger runs every 24h, inference trigger runs every 6h (you can change
 
 For instant validation in n8n editor, use:
 
-- `Manual Trigger (Training Test)` to run retraining immediately
+- `Manual Trigger (Training Test)` to run **all** models after a health check
+- Any **`Manual Train … Only`** node to run **only** that ML task (then `Retrieve Model Versions` runs as usual)
 - `Manual Trigger (Inference Test)` to run inference immediately
 
 ### 5.1) How to see each n8n criterion in action
@@ -84,13 +90,22 @@ For instant validation in n8n editor, use:
 
 #### B) Webhook trigger (event-driven retraining)
 
-Call the webhook endpoint:
+Retrain **everything** (same as scheduled flow):
 
 ```bash
 curl -X POST http://localhost:5680/webhook/padel-retrain-now
 ```
 
-Then check n8n **Executions**: run should start from `Webhook Trigger (Event Retrain)`.
+Retrain **one** model family (maps to `POST /train/...` on `model-service`):
+
+```bash
+curl -X POST http://localhost:5680/webhook/padel-retrain-classification
+curl -X POST http://localhost:5680/webhook/padel-retrain-regression
+curl -X POST http://localhost:5680/webhook/padel-retrain-clustering
+curl -X POST http://localhost:5680/webhook/padel-retrain-timeseries
+```
+
+Then check n8n **Executions** for the matching webhook node.
 
 #### C) Automated inference pipeline
 
@@ -348,3 +363,79 @@ From project root:
 ```bash
 docker compose exec model-service pytest -q
 ```
+
+### Linting and formatting (flake8, black, isort, mypy)
+
+Install dev tools on your machine (not inside the API image):
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+- **flake8** — PEP 8 style and common issues (config: `.flake8`)
+- **black** — automatic formatting (config: `pyproject.toml` → `[tool.black]`)
+- **isort** — import order, compatible with Black (`[tool.isort]`)
+- **mypy** — static typing checks (`[tool.mypy]`; third-party stubs may need extra `types-*` packages over time)
+
+From the repo root on **Windows** (check only, exit non-zero if something fails):
+
+```powershell
+.\scripts\check_code.ps1
+```
+
+Apply **black** and **isort** fixes:
+
+```powershell
+.\scripts\check_code.ps1 -Fix
+```
+
+Equivalent manual commands:
+
+```bash
+flake8 model-service
+black --check model-service
+isort --check-only model-service
+mypy model-service/app.py model-service/monitoring_tools.py model-service/simulation_runner.py model-service/tests/test_app.py
+```
+
+## 13) Production-like Monitoring Stack (Week S13)
+
+The project now includes a full observability stack:
+
+- Prometheus for metrics collection (`/metrics` scraping every 10s)
+- Grafana with pre-provisioned Prometheus datasource and dashboard
+- Alertmanager with routing for warning/critical alerts
+- API-level metrics for traffic, latency, errors, model quality, data quality, and drift
+
+### Start monitoring services
+
+```bash
+docker compose up -d --build model-service prometheus grafana alertmanager
+```
+
+If the browser shows **connection refused** on ports **9090**, **3000**, or **9093**, the monitoring containers are not running. Start them with the command above, or only the stack: `docker compose up -d prometheus grafana alertmanager` (requires `model-service` up for Prometheus targets).
+
+### Access monitoring UIs
+
+- Prometheus: [http://localhost:9090](http://localhost:9090)
+- Grafana: [http://localhost:3000](http://localhost:3000) (`admin` / `admin`)
+- Alertmanager: [http://localhost:9093](http://localhost:9093)
+
+### Metrics endpoint
+
+The API now exposes:
+
+- `GET /metrics` (Prometheus format)
+- `POST /monitoring/snapshot` (push synthetic monitoring values for demos/tests)
+
+### Run simulation scenarios
+
+To simulate load, drift, and degradation:
+
+```bash
+docker compose exec model-service python simulation_runner.py --api-url http://model-service:8000 --traffic-seconds 120 --rps 50 --drift-steps 30 --traffic-endpoint health
+```
+
+`--traffic-endpoint health` (default) keeps RPS realistic: each `POST /predict/matchup` reloads the full history and can take minutes on a single worker, so use `--traffic-endpoint matchup` only with low `--rps` and a high client timeout if you need that path stressed.
+
+You should see corresponding behavior in Grafana and Prometheus alerts.

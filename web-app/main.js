@@ -1,5 +1,5 @@
-/** Backend API (docker-compose maps model-service to localhost:8000). */
-const API_BASE = "http://localhost:8000";
+/** Backend API routed via nginx proxy (/api -> model-service). */
+const API_BASE = "/api";
 
 const form = document.getElementById("predictForm");
 const resultBox = document.getElementById("resultBox");

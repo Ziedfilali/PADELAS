@@ -1,0 +1,135 @@
+{
+  "entities": {
+    "MatchesWithViewsInteractions": {
+      "table": "dbo.matches_with_views_interactions",
+      "fields": [
+        "tournament_name",
+        "round",
+        "date",
+        "winner",
+        "team1_player1_name",
+        "team1_player2_name",
+        "team2_player1_name",
+        "team2_player2_name",
+        "views",
+        "aces_t1",
+        "aces_t2",
+        "double_faults_t1",
+        "double_faults_t2",
+        "won_on_1st_serve_t1",
+        "won_on_1st_serve_t2",
+        "won_on_2nd_serve_t1",
+        "won_on_2nd_serve_t2",
+        "total_points_won_t1",
+        "total_points_won_t2",
+        "break_points_converted_t1",
+        "break_points_converted_t2",
+        "total_won_on_return_t1",
+        "total_won_on_return_t2",
+        "set1_t1",
+        "set1_t2",
+        "set2_t1",
+        "set2_t2",
+        "set3_t1",
+        "set3_t2"
+      ],
+      "relationships": {
+        "Tournament": {
+          "type": "belongsTo",
+          "via": "tournament_name",
+          "inferred": true
+        },
+        "Player": {
+          "type": "manyToMany",
+          "via": "team1_player1_name,team1_player2_name,team2_player1_name,team2_player2_name",
+          "inferred": true
+        }
+      },
+      "sampleQuestions": [
+        "Who won the most recent match in the warehouse?",
+        "Which tournament has the highest total views?",
+        "Compare aces between team 1 and team 2 in the last 10 matches."
+      ]
+    },
+    "MonthlyViewsAggregate": {
+      "table": "derived from dbo.matches_with_views_interactions",
+      "fields": ["year", "month", "match_count", "total_views"],
+      "relationships": {
+        "MatchesWithViewsInteractions": {
+          "type": "belongsTo",
+          "via": "aggregated_from_date",
+          "inferred": true
+        }
+      },
+      "sampleQuestions": [
+        "What month had the most streamed views?",
+        "How many matches were played per month?"
+      ]
+    },
+    "PlayerAggregate": {
+      "table": "derived (not a physical table)",
+      "fields": [
+        "player_name",
+        "win_rate",
+        "aces",
+        "double_faults",
+        "total_points_won",
+        "total_won_on_return",
+        "matches_played",
+        "ranking",
+        "wins",
+        "losses"
+      ],
+      "relationships": {
+        "MatchesWithViewsInteractions": {
+          "type": "hasMany",
+          "via": "player appears on team1 or team2",
+          "inferred": true
+        }
+      },
+      "sampleQuestions": [
+        "Who is the top ranked player by win rate?",
+        "Who has the best win rate with at least 10 matches?",
+        "List top 5 players by average aces per match."
+      ]
+    },
+    "TournamentAggregate": {
+      "table": "derived from matches (not a physical table)",
+      "fields": [
+        "id",
+        "name",
+        "startDate",
+        "endDate",
+        "totalMatches",
+        "category",
+        "rounds"
+      ],
+      "relationships": {
+        "MatchesWithViewsInteractions": {
+          "type": "hasMany",
+          "via": "tournament_name",
+          "inferred": true
+        }
+      },
+      "sampleQuestions": [
+        "Which tournaments are upcoming (no winner yet)?",
+        "How many matches does each tournament have?"
+      ]
+    }
+  },
+  "dataAccess": {
+    "method": "REST",
+    "baseUrl": "http://model-service:8000",
+    "endpoints": {
+      "warehouseOverview": "GET /api/analytics/overview",
+      "warehouseStatus": "GET /api/analytics/warehouse-status",
+      "padelasHeroChat": "POST /api/padelas-hero/chat"
+    }
+  },
+  "dockerNetwork": {
+    "frontendService": "frontend",
+    "backendService": "model-service",
+    "dbService": "external SQL Server (not a compose service; host from DB_HOST e.g. host.docker.internal)",
+    "networkName": "Compose default project network (services resolve by service name)"
+  }
+}

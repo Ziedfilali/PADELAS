@@ -1,0 +1,219 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "id": 10,
+      "type": "text",
+      "title": "Story — metrics vs logs",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+      "transparent": false,
+      "options": {
+        "mode": "markdown",
+        "content": "### MLOps observability story\n\n1. **Traffic** (request rate): *what volume hit which routes?*\n2. **Stability**: **HTTP 5xx ratio** — correlate spikes with **`/metrics`**, **logs** (`stderr`/`/app/logs/api.log`), Alertmanager routes.\n3. **Latency**: Prometheus histogram of **middleware request duration** (end-to-end per HTTP call).\n4. **Model health**: **`model_accuracy`** and **`model_confidence_mean`** vs **baseline gauges** (`monitoring_baseline_*`).\n5. **Data health**: **feature drift gauge per feature**, **missing %**, **freshness hours** (usually updated via **`POST /monitoring/snapshot`** or your ingestion pipeline).\n6. **Why** something broke: Prometheus shows *what shifted*; **`monitoring_snapshot_anomalies`** + **`retraining_*`** entries in **`api.log`** explain *injections*, *skipped trains*, or *manual/auto retrains*.\n\n**Mandatory drills**: run `docker compose exec model-service python /app/simulation_runner.py --scenario all --api-url http://127.0.0.1:8000`\n(requires **`ENABLE_DEBUG_ENDPOINTS=true`** for the error scenario).\n\n**Alerts**: Prometheus `alert_rules.yml` → Slack (or webhook) via Alertmanager.",
+        "code": {
+          "language": "markdown",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        }
+      }
+    },
+    {
+      "id": 20,
+      "type": "timeseries",
+      "title": "1. Traffic — request rate by endpoint",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum by (endpoint) (rate(requests_total{job=\"mlops-api\"}[5m]))",
+          "refId": "A",
+          "legendFormat": "{{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "timeseries",
+      "title": "2. Stability — HTTP 5xx share of requests",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0, "max": 1 } },
+      "targets": [
+        {
+          "expr": "sum(rate(requests_total{job=\"mlops-api\",status=~\"5..\"}[5m])) / clamp_min(sum(rate(requests_total{job=\"mlops-api\"}[5m])), 1e-9)",
+          "refId": "A",
+          "legendFormat": "5xx/all"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "timeseries",
+      "title": "3. Performance — API p95 latency (all routes)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(request_duration_seconds_bucket{job=\"mlops-api\"}[5m])) by (le))",
+          "refId": "A",
+          "legendFormat": "p95 (s)"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket{job=\"mlops-api\"}[5m])) by (le))",
+          "refId": "B",
+          "legendFormat": "p99 (s)"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "timeseries",
+      "title": "Performance — POST /predict/matchup latency",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "targets": [
+        {
+          "expr": "sum(rate(request_duration_seconds_sum{job=\"mlops-api\",method=\"POST\",endpoint=\"/predict/matchup\"}[5m])) / clamp_min(sum(rate(request_duration_seconds_count{job=\"mlops-api\",method=\"POST\",endpoint=\"/predict/matchup\"}[5m])), 1e-9)",
+          "refId": "A",
+          "legendFormat": "mean (s)"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(request_duration_seconds_bucket{job=\"mlops-api\",method=\"POST\",endpoint=\"/predict/matchup\"}[5m])) by (le))",
+          "refId": "B",
+          "legendFormat": "p95 (s)"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "type": "timeseries",
+      "title": "4. Model health — accuracy vs baseline gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0, "max": 1 } },
+      "targets": [
+        {
+          "expr": "max(model_accuracy{job=\"mlops-api\"})",
+          "refId": "A",
+          "legendFormat": "current accuracy"
+        },
+        {
+          "expr": "monitoring_baseline_model_accuracy{job=\"mlops-api\"}",
+          "refId": "B",
+          "legendFormat": "baseline (reference)"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "type": "timeseries",
+      "title": "Model health — confidence mean vs baseline gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+      "fieldConfig": { "defaults": { "min": 0, "max": 1 } },
+      "targets": [
+        {
+          "expr": "max(model_confidence_mean{job=\"mlops-api\"})",
+          "refId": "A",
+          "legendFormat": "confidence mean"
+        },
+        {
+          "expr": "monitoring_baseline_confidence_mean{job=\"mlops-api\"}",
+          "refId": "B",
+          "legendFormat": "baseline (reference)"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "type": "timeseries",
+      "title": "5. Data health — max drift score · missing % · freshness (h)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+      "targets": [
+        { "expr": "max(feature_drift_score{job=\"mlops-api\"})", "refId": "A", "legendFormat": "max drift" },
+        { "expr": "data_missing_values_percent{job=\"mlops-api\"}", "refId": "B", "legendFormat": "missing %" },
+        { "expr": "data_freshness_hours{job=\"mlops-api\"}", "refId": "C", "legendFormat": "freshness hrs" }
+      ]
+    },
+    {
+      "id": 27,
+      "type": "stat",
+      "title": "Full training completions (Δ 24h)",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 32 },
+      "targets": [{ "expr": "sum(increase(full_training_completions_total{job=\"mlops-api\"}[24h]))", "refId": "A" }]
+    },
+    {
+      "id": 28,
+      "type": "stat",
+      "title": "Total predictions (counter)",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 32 },
+      "targets": [{ "expr": "sum(predictions_total{job=\"mlops-api\"})", "refId": "A" }]
+    },
+    {
+      "id": 29,
+      "type": "timeseries",
+      "title": "Prediction rate · labels",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 },
+      "targets": [
+        {
+          "expr": "sum by (label) (rate(predictions_total{job=\"mlops-api\"}[10m]))",
+          "refId": "A",
+          "legendFormat": "{{label}}"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "type": "timeseries",
+      "title": "HTTP breakdown (rate)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 40 },
+      "targets": [
+        {
+          "expr": "sum by (endpoint, status) (rate(requests_total{job=\"mlops-api\"}[$__rate_interval]))",
+          "refId": "A",
+          "legendFormat": "{{endpoint}} ({{status}})"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "type": "gauge",
+      "title": "Active requests",
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 48 },
+      "targets": [{ "expr": "active_requests{job=\"mlops-api\"}", "refId": "A" }]
+    },
+    {
+      "id": 32,
+      "type": "gauge",
+      "title": "Inference p95 (matchup)",
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 48 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(increase(inference_duration_seconds_bucket{job=\"mlops-api\",endpoint=\"/predict/matchup\"}[$__range])) by (le))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "type": "stat",
+      "title": "Inference errors · Δ24h",
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 48 },
+      "targets": [{ "expr": "sum(increase(inference_errors_total{job=\"mlops-api\"}[24h]))", "refId": "A" }]
+    },
+    {
+      "id": 34,
+      "type": "stat",
+      "title": "Process uptime · minutes · mlops-api",
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 48 },
+      "targets": [{ "expr": "(time() - process_start_time_seconds{job=\"mlops-api\"}) / 60", "refId": "A" }]
+    }
+  ],
+  "refresh": "15s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["mlops", "prometheus", "observability"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "",
+  "title": "MLOps Production Monitoring",
+  "uid": "mlops-prod-monitor",
+  "version": 6
+}

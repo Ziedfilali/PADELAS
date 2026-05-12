@@ -1,17 +1,27 @@
 import importlib.util
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from fastapi.testclient import TestClient
 
+_CACHED_APP_MODULE = None
+
 
 def _load_app_module():
-    app_path = Path(__file__).resolve().parents[1] / "app.py"
+    global _CACHED_APP_MODULE
+    if _CACHED_APP_MODULE is not None:
+        return _CACHED_APP_MODULE
+    app_root = Path(__file__).resolve().parents[1]
+    if str(app_root) not in sys.path:
+        sys.path.insert(0, str(app_root))
+    app_path = app_root / "app.py"
     spec = importlib.util.spec_from_file_location("app_module", app_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module
+    _CACHED_APP_MODULE = module
+    return _CACHED_APP_MODULE
 
 
 class FakeWinnerModel:
@@ -98,6 +108,60 @@ def test_debug_boom_returns_structured_error():
     assert body["status"] == "error"
     assert body["error_type"] == "internal_error"
     assert "request_id" in body
+
+
+def test_analytics_overview_has_payload(monkeypatch):
+    import routers.analytics as analytics_router
+
+    def fake_load(sql: str, csv_fb: str):
+        if "COUNT(*)" in sql:
+            return pd.DataFrame(
+                [{"year": 2024, "month": 3, "match_count": 2, "total_views": 1500.0}]
+            )
+        return pd.DataFrame(
+            [
+                {
+                    "tournament_name": "Demo Open",
+                    "round": "Final",
+                    "match_date": "2024-03-10",
+                    "winner": "team_1",
+                    "team1_player1_name": "A",
+                    "team1_player2_name": "B",
+                    "team2_player1_name": "C",
+                    "team2_player2_name": "D",
+                    "views": 1000,
+                    "aces_t1": 5,
+                    "aces_t2": 4,
+                    "double_faults_t1": 1,
+                    "double_faults_t2": 2,
+                    "won_on_1st_serve_t1": 20,
+                    "won_on_1st_serve_t2": 18,
+                    "won_on_2nd_serve_t1": 10,
+                    "won_on_2nd_serve_t2": 9,
+                    "total_points_won_t1": 62,
+                    "total_points_won_t2": 58,
+                    "break_points_converted_t1": 3,
+                    "break_points_converted_t2": 2,
+                    "total_won_on_return_t1": 20,
+                    "total_won_on_return_t2": 19,
+                }
+            ]
+        )
+
+    monkeypatch.setattr(analytics_router, "load_table", fake_load)
+    monkeypatch.setattr(analytics_router, "last_load_origin", lambda: "sql")
+    module = _load_app_module()
+    client = TestClient(module.app)
+    res = client.get("/api/analytics/overview")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["source"] == "warehouse"
+    assert body["dataOrigin"] == "sql"
+    assert len(body["matches"]) == 1
+    assert body["matches"][0]["tournamentName"] == "Demo Open"
+    assert len(body["tournaments"]) == 1
+    assert len(body["monthlyViews"]) == 1
+    assert len(body["players"]) == 4
 
 
 def test_predict_matchup_is_swap_consistent(monkeypatch):

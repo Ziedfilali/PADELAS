@@ -1,0 +1,135 @@
+# Baseline-aligned rules use gauges exported by model-service:
+#   monitoring_baseline_model_accuracy, monitoring_baseline_confidence_mean
+groups:
+  - name: mlops_alerts
+    interval: 30s
+    rules:
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, sum(rate(request_duration_seconds_bucket[5m])) by (le)) > 1.0
+        for: 2m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High API latency detected"
+          description: "P95 latency is above 1 second (baseline SLO for this stack)."
+
+      - alert: CriticalLatency
+        expr: histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket[5m])) by (le)) > 5.0
+        for: 1m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "Critical latency"
+          description: "P99 latency is above 5 seconds."
+
+      - alert: HighErrorRate
+        expr: sum(rate(requests_total{status=~"5.."}[5m])) > 0 and (sum(rate(requests_total{status=~"5.."}[5m])) / sum(rate(requests_total[5m]))) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High error rate"
+          description: "5xx error ratio is above 5%."
+
+      - alert: CriticalErrorRate
+        expr: sum(rate(requests_total{status=~"5.."}[1m])) > 0 and (sum(rate(requests_total{status=~"5.."}[1m])) / sum(rate(requests_total[1m]))) > 0.10
+        for: 1m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "Critical error rate"
+          description: "5xx error ratio is above 10%."
+
+      - alert: AccuracyDegradation
+        expr: max(model_accuracy) < scalar(monitoring_baseline_model_accuracy) * 0.90
+        for: 5m
+        labels:
+          severity: warning
+          component: model
+        annotations:
+          summary: "Model accuracy degraded"
+          description: "Accuracy fell below 90% of monitoring_baseline_model_accuracy."
+
+      - alert: CriticalAccuracyDropVsBaseline
+        expr: (scalar(monitoring_baseline_model_accuracy) - max(model_accuracy)) / scalar(monitoring_baseline_model_accuracy) > 0.05
+        for: 3m
+        labels:
+          severity: critical
+          component: model
+        annotations:
+          summary: "Critical accuracy drop vs baseline"
+          description: "Accuracy dropped more than 5% relative to monitoring_baseline_model_accuracy."
+
+      - alert: LowModelConfidence
+        expr: max(model_confidence_mean) < 0.7
+        for: 5m
+        labels:
+          severity: warning
+          component: model
+        annotations:
+          summary: "Low model confidence"
+          description: "Mean confidence dropped below 70%."
+
+      - alert: ConfidenceDropVsBaseline
+        expr: (scalar(monitoring_baseline_confidence_mean) - max(model_confidence_mean)) / scalar(monitoring_baseline_confidence_mean) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: model
+        annotations:
+          summary: "Confidence drop vs baseline"
+          description: "Mean confidence fell more than 5% relative to monitoring_baseline_confidence_mean."
+
+      - alert: HighFeatureDrift
+        expr: max(feature_drift_score) > 0.3
+        for: 10m
+        labels:
+          severity: warning
+          component: data
+        annotations:
+          summary: "High feature drift (max score)"
+          description: "Maximum feature drift score is above 0.3."
+
+      - alert: StaleData
+        expr: data_freshness_hours > 12
+        for: 15m
+        labels:
+          severity: warning
+          component: data
+        annotations:
+          summary: "Data is stale"
+          description: "Data freshness is above 12 hours."
+
+      - alert: HighMissingValues
+        expr: data_missing_values_percent > 0.10
+        for: 5m
+        labels:
+          severity: warning
+          component: data
+        annotations:
+          summary: "High missing values"
+          description: "Missing values exceed 10%."
+
+      - alert: APIUnhealthy
+        expr: api_health_status == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "API unhealthy"
+          description: "API health gauge indicates unhealthy status."
+
+      - alert: ModelUnhealthy
+        expr: min(model_health_status) == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: model
+        annotations:
+          summary: "Model unhealthy"
+          description: "At least one model_health_status series is unhealthy (0)."

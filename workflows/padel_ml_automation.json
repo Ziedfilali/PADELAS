@@ -48,6 +48,182 @@
       ]
     },
     {
+      "parameters": {},
+      "id": "n100",
+      "name": "Manual Train Classification Only",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        40,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "padel-retrain-classification",
+        "responseMode": "onReceived"
+      },
+      "id": "n101",
+      "name": "Webhook Retrain Classification",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        40,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://model-service:8000/train/winner",
+        "sendBody": false,
+        "options": {
+          "timeout": 1200000
+        }
+      },
+      "id": "n102",
+      "name": "Train Classification Only",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        360,
+        70
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "n103",
+      "name": "Manual Train Regression Only",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        40,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "padel-retrain-regression",
+        "responseMode": "onReceived"
+      },
+      "id": "n104",
+      "name": "Webhook Retrain Regression",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        40,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://model-service:8000/train/views",
+        "sendBody": false,
+        "options": {
+          "timeout": 1200000
+        }
+      },
+      "id": "n105",
+      "name": "Train Regression Only",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        360,
+        270
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "n106",
+      "name": "Manual Train Clustering Only",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        40,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "padel-retrain-clustering",
+        "responseMode": "onReceived"
+      },
+      "id": "n107",
+      "name": "Webhook Retrain Clustering",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        40,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://model-service:8000/train/clustering",
+        "sendBody": false,
+        "options": {
+          "timeout": 1200000
+        }
+      },
+      "id": "n108",
+      "name": "Train Clustering Only",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        360,
+        470
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "n109",
+      "name": "Manual Train Time Series Only",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        40,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "padel-retrain-timeseries",
+        "responseMode": "onReceived"
+      },
+      "id": "n110",
+      "name": "Webhook Retrain Time Series",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        40,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://model-service:8000/train/timeseries",
+        "sendBody": false,
+        "options": {
+          "timeout": 1200000
+        }
+      },
+      "id": "n111",
+      "name": "Train Time Series Only",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        360,
+        670
+      ]
+    },
+    {
       "parameters": {
         "method": "GET",
         "url": "http://model-service:8000/health",
@@ -338,6 +514,138 @@
         [
           {
             "node": "Check Training API Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Train Classification Only": {
+      "main": [
+        [
+          {
+            "node": "Train Classification Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Retrain Classification": {
+      "main": [
+        [
+          {
+            "node": "Train Classification Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Train Classification Only": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Model Versions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Train Regression Only": {
+      "main": [
+        [
+          {
+            "node": "Train Regression Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Retrain Regression": {
+      "main": [
+        [
+          {
+            "node": "Train Regression Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Train Regression Only": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Model Versions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Train Clustering Only": {
+      "main": [
+        [
+          {
+            "node": "Train Clustering Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Retrain Clustering": {
+      "main": [
+        [
+          {
+            "node": "Train Clustering Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Train Clustering Only": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Model Versions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Train Time Series Only": {
+      "main": [
+        [
+          {
+            "node": "Train Time Series Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Retrain Time Series": {
+      "main": [
+        [
+          {
+            "node": "Train Time Series Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Train Time Series Only": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Model Versions",
             "type": "main",
             "index": 0
           }
