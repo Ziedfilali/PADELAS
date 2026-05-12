@@ -1,12 +1,11 @@
 # Padel-analytics
 
-Monorepo for padel data analytics, ML automation, and ETL. **GitHub default branch is `main`.** This branch (`master`) holds only shared entrypoints: this README and `.gitignore`.
+Monorepo for padel data analytics, ML automation, and ETL. **GitHub default branch is `master`**, which only holds this landing **README** and a shared **`.gitignore`**. Implementations live on the feature branches below.
 
 ## Where the code lives
 
 | Branch | Contents |
 |--------|----------|
-| [`main`](https://github.com/Ziedfilali/Padel-analytics/tree/main) | Legacy stack: Airflow DAGs (`dags/`), `api_ml.py`, `docker-compose.yaml`, `n8n_backup/`, `requirements.txt` |
 | [`feature/mlops-frontend-monitoring-may2026`](https://github.com/Ziedfilali/Padel-analytics/tree/feature/mlops-frontend-monitoring-may2026) | n8n + `model-service` + MLflow/MinIO + Expo `frontend/` + monitoring (Grafana/Prometheus) + `web-app/` |
 | [`feature/audit-pi-talend-airflow-docker`](https://github.com/Ziedfilali/Padel-analytics/tree/feature/audit-pi-talend-airflow-docker) | Talend job exports (`talend_jobs/`), Airflow Docker runtime, audit scripts and `output/` reports |
 
@@ -20,8 +19,6 @@ git fetch origin
 git checkout feature/mlops-frontend-monitoring-may2026
 # Example: Audit / Talend + Airflow
 git checkout feature/audit-pi-talend-airflow-docker
-# Example: original Airflow + API layout
-git checkout main
 ```
 
 ## Secrets
