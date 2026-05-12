@@ -1,6 +1,8 @@
 # Padel-analytics
 
-Monorepo for padel data analytics, ML automation, and ETL. **GitHub default branch is `master`**, which only holds this landing **README** and a shared **`.gitignore`**. Implementations live on the feature branches below.
+**Padel analytics & MLOps:** n8n-orchestrated training and serving, MLflow versioning, optional Expo frontend and Grafana/Prometheus monitoring — plus a Talend + Airflow audit/ETL track in a second branch.
+
+**Default branch `master`** holds this landing page, **`.gitignore`**, [**MIT `LICENSE`**](LICENSE), and [**`SECURITY.md`**](SECURITY.md). Application code is on the feature branches below.
 
 ## Where the code lives
 
@@ -28,3 +30,13 @@ Never commit `.env`, database passwords, API keys, or Slack webhooks. Use `.env.
 ## Repository
 
 [https://github.com/Ziedfilali/Padel-analytics](https://github.com/Ziedfilali/Padel-analytics)
+
+## GitHub “About” (paste once on the repo homepage)
+
+GitHub does not read these from a file; open the repo → gear icon **About** → set:
+
+- **Description:**  
+  `Padel analytics monorepo: n8n + FastAPI + MLflow/MinIO, Expo UI & monitoring; Talend + Airflow audit ETL.`
+- **Topics (add each tag):**  
+  `python` `mlops` `docker` `fastapi` `n8n` `mlflow` `airflow` `talend` `grafana` `prometheus` `expo` `sql-server` `padel` `data-engineering`
+- **Website** (optional): leave blank or your portfolio URL.
