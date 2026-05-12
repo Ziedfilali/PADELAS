@@ -37,6 +37,23 @@ GitHub does not read these from a file; open the repo â†’ gear icon **About** â†
 
 - **Description:**  
   `Padel analytics monorepo: n8n + FastAPI + MLflow/MinIO, Expo UI & monitoring; Talend + Airflow audit ETL.`
-- **Topics (add each tag):**  
-  `python` `mlops` `docker` `fastapi` `n8n` `mlflow` `airflow` `talend` `grafana` `prometheus` `expo` `sql-server` `padel` `data-engineering`
-- **Website** (optional): leave blank or your portfolio URL.
+- **Topics:** type **one tag at a time**, press **Enter** after each, then add the next. **Do not** paste the whole line as a single topic (spaces are not allowed inside one topic).
+
+Suggested tags (copy **one line**, add as **one** topic, repeat for each line):
+
+  - `python`
+  - `mlops`
+  - `docker`
+  - `fastapi`
+  - `n8n`
+  - `mlflow`
+  - `airflow`
+  - `talend`
+  - `grafana`
+  - `prometheus`
+  - `expo`
+  - `sqlserver`
+  - `padel`
+  - `data-engineering`
+
+If GitHub rejects a tag, skip it or try a shorter synonym (e.g. `etl` instead of `data-engineering`).
