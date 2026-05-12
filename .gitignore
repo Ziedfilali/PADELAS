@@ -1,0 +1,45 @@
+# Secrets and local env
+.env
+.env.local
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Logs and runtime noise
+logs/
+*.log
+hs_err_pid*.log
+
+# Data & large / generated artifacts (adjust per branch if you whitelist sample CSVs)
+data/*.csv
+models/*.joblib
+models/players_cluster_output*.csv
+
+# Docker / Airflow / ML local volumes
+n8n_data/
+mlflow_data/
+minio_data/
+postgres_data/
+airflow.db
+airflow-webserver.pid
+mlruns/
+mlflow.db
+
+# Frontend (when present on a branch)
+frontend/node_modules/
+frontend/dist/
+frontend/.expo/
+
+# Monitoring secrets (when present on a branch)
+monitoring/alertmanager/slack_webhook.url
+
+# OS
+.DS_Store
+Thumbs.db
